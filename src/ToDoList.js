@@ -17,9 +17,9 @@ function ToDoList() {
   const [editMode, setEditMode] = useState(false);
   const [editTodo, setEditTodo] = useState(null);
 
-  const buttonTitle = editMode ? "Editar!" : "Agregar!";
+  const addOrEditText = editMode ? "Editar" : "Agregar";
   const buttonStyle = editMode ? "warning" : "info";
-
+  
   const endpoint = "http://localhost:3000/todos/";
   const savedTodos = useAPI(endpoint);
   console.log(savedTodos);
@@ -61,13 +61,13 @@ function ToDoList() {
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col sm={8} md={8} lg={8}>
-                  <Form.Control type="text" placeholder="Agregar tarea acá."
+                  <Form.Control type="text" placeholder={addOrEditText + " tarea acá"}
                     onChange={event => setTodoText(event.target.value)}
                     value={todoText} ref={inputElement} autoFocus />
                 </Col>
 
                 <Col sm={4} md={4} lg={4}>
-                  <Button variant={buttonStyle} type="submit">{buttonTitle}</Button>
+                  <Button variant={buttonStyle} type="submit">{addOrEditText + '!' }</Button>
                 </Col>
               </Row>
             </Form>
