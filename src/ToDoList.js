@@ -58,7 +58,7 @@ function ToDoList() {
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col sm={8} md={8} lg={8}>
-                  <Form.Control type="text" placeholder="Enter todo task here"
+                  <Form.Control type="text" placeholder="Agregar tarea acá."
                     onChange={event => setTodoText(event.target.value)}
                     value={todoText} ref={inputElement} />
                 </Col>
