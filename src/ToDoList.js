@@ -15,7 +15,7 @@ function ToDoList() {
   const [editMode, setEditMode] = useState(false);
   const [editTodo, setEditTodo] = useState(null);
 
-  const buttonTitle = editMode ? "Edit task" : "Add task";
+  const buttonTitle = editMode ? "Editar!" : "Agregar!";
   const buttonStyle = editMode ? "warning" : "info";
 
   const handleSubmit = event => {
@@ -76,9 +76,9 @@ function ToDoList() {
               <thead>
                 <tr>
                   <th className="thStyle">Id</th>
-                  <th className="thStyle">Todo task</th>
-                  <th className="thStyle">Edit</th>
-                  <th className="thStyle">Delete</th>
+                  <th className="thStyle">Tarea</th>
+                  <th className="thStyle">Editar</th>
+                  <th className="thStyle">Borrar</th>
                 </tr>
               </thead>
 
