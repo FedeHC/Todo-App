@@ -1,5 +1,7 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { TodosContext } from "./App";
+import useAPI from "./useAPI";
+
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -17,6 +19,14 @@ function ToDoList() {
 
   const buttonTitle = editMode ? "Editar!" : "Agregar!";
   const buttonStyle = editMode ? "warning" : "info";
+
+  const endpoint = "http://localhost:3000/todos/";
+  const savedTodos = useAPI(endpoint);
+  console.log(savedTodos);
+  
+  useEffect(( ) => {
+    dispatch({ type: "get", payload: savedTodos });
+  }, [savedTodos]);
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -36,13 +46,6 @@ function ToDoList() {
 
   const inputElement = useRef(null);
 
-  useEffect(() => {
-    if (inputElement.current) {
-      inputElement.current.focus();
-      inputElement.current.select();
-    }
-  }, []);
-
   return (
     <Container fluid>
       <Row className="justify-content-md-center">
@@ -60,7 +63,7 @@ function ToDoList() {
                 <Col sm={8} md={8} lg={8}>
                   <Form.Control type="text" placeholder="Agregar tarea acá."
                     onChange={event => setTodoText(event.target.value)}
-                    value={todoText} ref={inputElement} />
+                    value={todoText} ref={inputElement} autoFocus />
                 </Col>
 
                 <Col sm={4} md={4} lg={4}>
