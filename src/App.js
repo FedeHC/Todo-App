@@ -3,18 +3,16 @@ import ToDoList from './ToDoList'
 
 
 const todosInitialState = {
-  todos: [
-    { id: 1, text: "Plantar un árbol." },
-    { id: 2, text: "Escribir un libro." },
-    { id: 3, text: "Comprar un chocolate." },
-    { id: 4, text: "Charlar con amigos." }
-  ]
+  todos: []
 };
 
 export const TodosContext = React.createContext();
 
 function todosReducer(state, action) {
   switch (action.type) {
+    case 'get':
+      return { ...state,todos:action.payload };
+
     case 'add':
       let newId;
       if (state.todos.length > 0)
