@@ -11,18 +11,11 @@ export const TodosContext = React.createContext();
 function todosReducer(state, action) {
   switch (action.type) {
     case 'get':
-      return { ...state,todos:action.payload };
+      const newTodos = action.payload;
+      return { ...state, todos: newTodos };
 
     case 'add':
-      let newId;
-      if (state.todos.length > 0)
-        newId = state.todos[state.todos.length-1].id + 1;
-      else
-        newId = 1;
-
-      const newToDo = { id: newId, text: action.payload };
-      const addedToDos = [...state.todos, newToDo];
-      return { ...state, todos: addedToDos };
+      return { ...state, todos: action.payload };
 
     case 'delete':
       const filteredTodoState = state.todos.filter(todo => todo.id !== action.payload.id);

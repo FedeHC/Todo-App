@@ -2,25 +2,25 @@ import { useState, useEffect } from 'react';
 
 
 const useAPI = (endpoint) => {
-  const [ data, setData ] = useState([]);
+  const [data, setData] = useState([]);
 
-  const getData = async () => {
-    const response = await fetch(endpoint);
-    let dataJson = null;
+  useEffect(() => {
+    const getData = async () => {
+      const response = await fetch(endpoint, { method: 'GET' });
+      let dataJson = null;
 
-    if(response.ok) {
-      dataJson = await response.json();
-      // console.log(dataJson);
-      setData(dataJson);
+      if (response.ok) {
+        dataJson = await response.json();
+        // console.log("[useAPI] dataJson:\n",dataJson);
+        setData(dataJson);
+      }
+      else {
+        console.log("# ERROR: " + response.status);
+      }
     }
-    else {
-      console.log("# ERROR: " + response.status);
-    }
-  }
-  
-  useEffect(()=> {
+
     getData();
-  },[]);
+  }, [endpoint]);
 
   // console.log("-DATA:\n", data);
   return data;

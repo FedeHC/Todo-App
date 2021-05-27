@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import { TodosContext } from "./App";
 import useAPI from "./useAPI";
 
@@ -19,33 +19,78 @@ function ToDoList() {
 
   const addOrEditText = editMode ? "Editar" : "Agregar";
   const buttonStyle = editMode ? "warning" : "info";
-  
+
+  // API GET:
   const endpoint = "http://localhost:3000/todos/";
   const savedTodos = useAPI(endpoint);
-  console.log(savedTodos);
-  
-  useEffect(( ) => {
-    dispatch({ type: "get", payload: savedTodos });
-  }, [savedTodos]);
 
-  const handleSubmit = event => {
+  useEffect(() => {
+    dispatch({ type: "get", payload: savedTodos });
+  }, [savedTodos, dispatch]);
+
+  // console.log("[ToDoList] state:\n", state);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
+    // Edit submit:
     if (editMode) {
-      dispatch({ type: 'edit', payload:{ ...editTodo, text:todoText } });
+      // console.log("-editTodo: ", editTodo);
+      const editedTodo = { id: editTodo.id, text: todoText };
+      await fetch(endpoint+editTodo.id,
+        {
+          method: 'PUT',
+          body: JSON.stringify(editedTodo),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+      dispatch({ type: 'edit', payload: { ...editTodo, text: todoText } });
       setEditMode(false);
       setEditTodo(null);
     }
+    // Add submit:
     else {
       if (todoText !== "") {
-        dispatch({ type: "add", payload: todoText })
+        let newId;
+        if (state.todos.length > 0)
+          newId = state.todos[state.todos.length - 1].id + 1;
+        else
+          newId = 1;
+
+        const newToDo = { id: newId, text: todoText };
+        const addedToDos = [...state.todos, newToDo];
+
+        await fetch(endpoint,
+                    {
+                      method: 'POST',
+                      body: JSON.stringify(newToDo),
+                      headers: {
+                        "Content-Type": "application/json"
+                      }
+                    });
+        dispatch({ type: "add", payload: addedToDos })
       }
     }
     setTodoText("");
   }
+  
+  // Edit Callback:
+  const editAction = async (todo) => {
+    setTodoText(todo.text);
+    setEditMode(true);
+    setEditTodo(todo);
+    inputElement.current.focus();
+  }
+  
+  // Delete Callback:
+  const deleteAction = async (todo) => {
+    await fetch(endpoint + todo.id, { method: 'DELETE' });
+    dispatch({ type: "delete", payload: todo });
+  }
 
   const inputElement = useRef(null);
-
+  
   return (
     <Container fluid>
       <Row className="justify-content-md-center">
@@ -56,8 +101,8 @@ function ToDoList() {
             <h1 className="header text-center">ToDo App :)</h1>
           </div>
 
-          {/* ADD Todo */}
           <div className="divSection">
+            {/* FORM */}
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col sm={8} md={8} lg={8}>
@@ -66,8 +111,9 @@ function ToDoList() {
                     value={todoText} ref={inputElement} autoFocus />
                 </Col>
 
+                {/* ADD */}
                 <Col sm={4} md={4} lg={4}>
-                  <Button variant={buttonStyle} type="submit">{addOrEditText + '!' }</Button>
+                  <Button variant={buttonStyle} type="submit">{addOrEditText + '!'}</Button>
                 </Col>
               </Row>
             </Form>
@@ -86,21 +132,19 @@ function ToDoList() {
               </thead>
 
               <tbody>
-                {state.todos.map(todo => (
+                {state.todos && state.todos.map(todo => (
                   <tr key={todo.id}>
                     <td className="firstTd">{todo.id}</td>
+
                     <td>{todo.text}</td>
-                    <td onClick={() => {
-                      setTodoText(todo.text); // Copia el contenido de texto al input.
-                      setEditMode(true);      // Modo edit para handleSubmit.
-                      setEditTodo(todo);      // Copia del objeto.
-                      inputElement.current.focus();
-                    }}>
+
+                    {/* EDIT */}
+                    <td onClick={() => editAction(todo)}>
                       <Button variant="outline-warning" type="button">✏️</Button>
                     </td>
-                    <td onClick={() => {
-                      dispatch({ type: "delete", payload: todo });
-                    }}>
+
+                    {/* DELETE */}
+                    <td onClick={() => deleteAction(todo)}>
                       <Button variant="outline-secondary" type="button">🗑</Button>
                     </td>
                   </tr>

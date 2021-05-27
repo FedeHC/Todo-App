@@ -1,12 +1,20 @@
 {
   "todos": [
-    { "id": 1,
-      "text": "Plantar un árbol." },
-    { "id": 2,
-      "text": "Escribir un libro." },
-    { "id": 3,
-      "text": "Comprar un chocolate." },
-    { "id": 4,
-      "text": "Charlar con amigos." }
+    {
+      "id": 1,
+      "text": "Plantar un árbol."
+    },
+    {
+      "id": 2,
+      "text": "Escribir un libro."
+    },
+    {
+      "id": 3,
+      "text": "Comprar un chocolate."
+    },
+    {
+      "id": 4,
+      "text": "Charlar con amigos."
+    }
   ]
 }
